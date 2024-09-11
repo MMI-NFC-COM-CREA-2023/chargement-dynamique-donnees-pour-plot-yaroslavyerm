@@ -127,4 +127,12 @@
         </figure>
     </section>
 </body>
+
+<script type="module">
+    import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
+
+    const tennisResponse = await fetch("./tennis.json");
+    const tennis = await tennisResponse.json();
+    console.log(tennis);
+</script>
 </html>
