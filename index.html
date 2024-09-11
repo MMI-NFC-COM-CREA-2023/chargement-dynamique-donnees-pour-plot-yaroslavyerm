@@ -57,7 +57,7 @@
 
         .container {
         width: 100%;
-        height: 300px;
+        height: 100%;
         background-color: #f5f5f5;
         }
     </style>
@@ -85,7 +85,7 @@
         l'intégrité du jeu. À mesure que le sport continue d'évoluer, il sera crucial de veiller à ce que l'accent reste mis sur
         l'athlétisme, la compétence et la passion qui ont fait du tennis un spectacle mondial bien-aimé.</p>
         <figure>
-            <figcaption>Graphic 1</figcaption>
+            <figcaption>Graphique 1</figcaption>
             <div id="graph1" class="container"></div>
         </figure>
     </section>
@@ -122,7 +122,7 @@
         <p>Malgré ces critiques, il est indéniable que le Big Three a marqué une époque et restera dans les mémoires comme l'un
             des trios les plus dominants de l'histoire du tennis.</p>
         <figure>
-            <figcaption>Graphic 2</figcaption>
+            <figcaption>Graphique 2</figcaption>
             <div id="graph2" class="container"></div>
         </figure>
     </section>
@@ -133,6 +133,62 @@
 
     const tennisResponse = await fetch("./tennis.json");
     const tennis = await tennisResponse.json();
-    console.log(tennis);
+
+const updatedData1 = await tennis.map(d => ({
+        ...d,
+        TOURNAMENT: d.TOURNAMENT.includes("Australian Open") ? "Australian Open" : d.TOURNAMENT
+    }));
+
+   const graph1 = Plot.plot({
+   marginLeft: 60,
+        marks: [
+            Plot.ruleY([0]),  // Draws the horizontal line at Y = 0
+            Plot.lineY(updatedData1.filter(d => d.WINNER_PRIZE > 0), {  // Only include data where PRIZE_EURO is greater than 0
+                x: "YEAR",
+                y: "WINNER_PRIZE",
+                z: "TOURNAMENT",  // Group lines by TOURNAMENT
+                stroke: "TOURNAMENT"  // Assign different colors to each TOURNAMENT
+            })
+        ],
+        x: {
+            ticks: updatedData1.filter(d => d.YEAR % 10 === 0).map(d => d.YEAR),  // Show ticks only for every 20th year
+            label: "Year"
+        },
+        color: {
+            legend: true,  // Show the legend
+            legendPosition: "top",  // Place the legend at the top
+            label: "Tournament"  // Label for the legend
+        }
+    });
+
+            const div1 = document.querySelector("#graph1");
+                div1.append(graph1);
+
+    const tennisResponse2 = await fetch("./tennis2.json");
+    const tennis2 = await tennisResponse2.json();
+
+    const graph2 = Plot.plot({
+            marginLeft: 125,
+            color: { legend: true },
+            marks: [
+                Plot.barX(
+                    tennis2,
+                    Plot.groupY(
+                        { x: "count" },
+                        {
+                            x: "WINNER",
+                            y: "WINNER",
+                            fill: "TOURNAMENT",
+                            tip: true,
+                            sort: { y: "x", reverse: true }
+                        }
+                    )
+                ),
+                Plot.ruleX([0])
+            ]
+        });
+
+        const div2 = document.querySelector("#graph2");
+            div2.append(graph2);
 </script>
 </html>
