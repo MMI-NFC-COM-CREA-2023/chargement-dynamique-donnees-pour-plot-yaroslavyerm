@@ -127,10 +127,10 @@
         </figure>
     </section>
 </body>
-
-<script type="module">
-    import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
-
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+<script>
+async function faitAsync(){
     const tennisResponse = await fetch("./tennis.json");
     const tennis = await tennisResponse.json();
 
@@ -164,9 +164,10 @@ const updatedData1 = await tennis.map(d => ({
             const div1 = document.querySelector("#graph1");
                 div1.append(graph1);
 
-    const tennisResponse2 = await fetch("./tennis2.json");
-    const tennis2 = await tennisResponse2.json();
 
+
+      const tennisResponse2 = await fetch("./tennis2.json");
+    const tennis2 = await tennisResponse2.json();
     const graph2 = Plot.plot({
             marginLeft: 125,
             color: { legend: true },
@@ -190,5 +191,8 @@ const updatedData1 = await tennis.map(d => ({
 
         const div2 = document.querySelector("#graph2");
             div2.append(graph2);
+    }
+
+    faitAsync();
 </script>
 </html>
